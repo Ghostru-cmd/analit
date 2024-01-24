@@ -2,9 +2,11 @@
   "name": "analit",
   "version": "1.0.0",
   "license": "MIT",
+  "main": "./dist/main.js",
   "scripts": {
-    "setup": "cd ./app && yarn || cd ./electron yarn",
-    "start": "concurrently -k \"cd ./app && yarn dev\" \"cd ./electron && yarn dev\""
+    "setup": "cd ./app && yarn && cd ./../electron && yarn",
+    "start": "concurrently -k \"cd ./app && yarn dev\" \"cd ./electron && yarn dev\"",
+    "build:linux": "cd ./electron && yarn electron-builder -w"
   },
   "dependencies": {
     "concurrently": "^8.2.2"

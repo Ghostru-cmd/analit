@@ -1,10 +1,13 @@
 {
+  "name": "time",
+  "version": "0.0.0",
   "main": "../dist/main.js",
   "type": "module",
   "scripts": {
     "dev": "nodemon --exec \"tsc && wait-on tcp:9090 && electron .\""
   },
   "devDependencies": {
+    "@types/electron": "^1.6.10",
     "concurrently": "^8.2.2",
     "electron": "^28.1.4",
     "electron-builder": "^24.9.1",
@@ -16,7 +19,18 @@
   },
   "dependencies": {
     "electron-log": "^5.1.0",
+    "electron-screenshot-app": "^4.0.3",
     "electron-store": "^8.1.0",
     "electron-updater": "^6.1.7"
+  },
+  "build": {
+    "productName": "productName",
+    "linux": {
+      "artifactName": "${productName}-${version}-${arch}-linux.${ext}",
+      "target": [
+        "deb"
+      ]
+    },
+    "extends": null
   }
 }
