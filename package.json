@@ -1,0 +1,12 @@
+{
+  "name": "analit",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "setup": "cd ./app && yarn || cd ./electron yarn",
+    "start": "concurrently -k \"cd ./app && yarn dev\" \"cd ./electron && yarn dev\""
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
