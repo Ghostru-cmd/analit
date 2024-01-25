@@ -8,13 +8,16 @@
   "scripts": {
     "init": "yarn && cd ./frontend && yarn",
     "build": "tsc && cd ./frontend && yarn build",
-    "app": "electron-builder",
+    "app:win": "electron-builder --win",
+    "app:linux": "electron-builder --linux",
+    "app:mac": "electron-builder --mac",
     "watch": "nodemon --exec \"tsc && wait-on tcp:9090 && electron .\"",
-    "start": "concurrently -k \"cd ./frontend && yarn dev\" \"set APP_IS_DEV=yes && yarn watch\""
+    "start": "concurrently -k \"cd ./frontend && yarn dev\" \"yarn watch\""
   },
   "devDependencies": {
     "concurrently": "^7.6.0",
-    "electron": "^22.0.0",
+    "dotenv": "^16.4.1",
+    "electron": "^28.2.0",
     "electron-builder": "^23.6.0",
     "electron-devtools-installer": "^3.2.0",
     "nodemon": "^2.0.20",
@@ -27,7 +30,11 @@
     "electron-updater": "^5.3.0",
     "ts-node": "^10.9.2"
   },
+  "permissions": {
+    "desktopCapture": true
+  },
   "build": {
+    "asar": false,
     "appId": "com.official-electron-vue.app",
     "productName": "Electron Vue",
     "copyright": "Copyright © 2022 ${author}",

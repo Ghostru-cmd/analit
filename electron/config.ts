@@ -1,1 +1,1 @@
-export const isDev = !!process.env.APP_IS_DEV;
+export const isDev = !!process.env.IS_DEV;

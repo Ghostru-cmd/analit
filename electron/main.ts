@@ -1,4 +1,6 @@
-import { app, BrowserWindow, ipcRenderer, desktopCapturer, screen } from "electron"
+require('dotenv').config()
+
+import { app, BrowserWindow, ipcMain, desktopCapturer, screen } from "electron"
 import path from "path"
 import { isDev } from "./config"
 import * as fs from 'fs'
@@ -13,11 +15,11 @@ async function createWindow() {
         minHeight: 600,
 
         webPreferences: {
+            preload: path.join(__dirname, 'preload.js'),
             nodeIntegration: true,
             devTools: isDev,
         },
         show: false,
-        alwaysOnTop: true,
         frame: true,
     })
 
@@ -31,7 +33,7 @@ app.whenReady().then(async () => {
 
     mainWindow.show()
 
-    ipcRenderer.on('screenshot', async (event, folderPath) => {
+    ipcMain.handle('screenshot', async (event, folderPath) => {
         const thumbnailSize = screen.getAllDisplays().reduce((acc, display) => {
             acc.width = acc.width > display.size.width ? acc.width : display.size.width
             acc.height = acc.height > display.size.height ? acc.height : display.size.height

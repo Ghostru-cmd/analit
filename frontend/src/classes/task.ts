@@ -1,4 +1,3 @@
-const { ipcRenderer } = window.require('electron')
 import { Dayjs } from 'dayjs'
 import { RequestedTask } from '../interfaces'
 import { initTimer } from "../helpers";
@@ -19,8 +18,7 @@ export default class Task extends TableEntity {
     super.toggleOn = isOn
     if (this.isOn) {
       this.interval = setInterval(() => this.time = this.time.add(1, 'second'), 1000)
-      // @ts-ignore
-      this.screenshot = setInterval(() => ipcRenderer.send('screenshot'), 10000 || 10 * 60 * 1000)
+      this.screenshot = setInterval(() => window.events.screenshot(), 10000 || 10 * 60 * 1000)
     }
     else {
       clearInterval(this.interval)
