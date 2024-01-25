@@ -1,22 +1,14 @@
 import { RequestedProject } from '../interfaces'
-import Task from './task.ts'
+import Task from './task'
 import {addTime, initTimer} from "../helpers";
+import TableEntity from './table-entity'
 
-export default class Project {
-  private id: number
-  private name: string
+export default class Project extends TableEntity {
   private tasks: Task[] = []
-  public isOn = false
-  public timeFormat = 'HH:mm:ss'
 
   constructor(project: RequestedProject) {
-    this.id = project.id
-    this.name = project.name
+    super(project)
     this.tasks = project.tasks.map(task => new Task(task))
-  }
-
-  set toggleOn(isOn: boolean) {
-    this.isOn = isOn
   }
 
   get getTime() {
@@ -25,14 +17,6 @@ export default class Project {
 
   get getFormatedTime() {
     return this.getTime.format(this.timeFormat)
-  }
-
-  get getId() {
-    return this.id
-  }
-
-  get getName() {
-    return this.name
   }
 
   get getTasks() {
