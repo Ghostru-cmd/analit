@@ -5,8 +5,11 @@ import * as logger from 'electron-log'
 import path from 'path'
 import { isDev } from './config'
 import * as fs from 'fs'
+import os from 'os'
 
 let mainWindow: BrowserWindow
+
+const isLinux = os.platform() === 'linux'
 
 const mainPath = isDev ? __dirname : path.join(__dirname, '../../../')
 const screenshotPath = path.join(mainPath, 'screenshot')
@@ -41,14 +44,19 @@ app.whenReady().then(async () => {
 
   ipcMain.handle('screenshot', async () => {
     try {
-      const sources = await desktopCapturer.getSources({
-        types: ['screen'],
-        thumbnailSize: { height: 1080, width: 1920 }
-      })
       if (!fs.existsSync(screenshotPath)) fs.mkdirSync(screenshotPath)
-      sources.forEach((source) =>
-        fs.writeFileSync(path.join(screenshotPath, `${Date.now()}_${source.display_id}.png`), source.thumbnail.toPNG())
-      )
+      if (isLinux) {
+
+      }
+      else {
+        const sources = await desktopCapturer.getSources({
+          types: ['screen'],
+          thumbnailSize: {height: 1080, width: 1920}
+        })
+        sources.forEach((source) =>
+          fs.writeFileSync(path.join(screenshotPath, `${Date.now()}_${source.display_id}.png`), source.thumbnail.toPNG())
+        )
+      }
     } catch (e) {
       logger.error('electron/main.ts | save screenshot error', e)
     } finally {
