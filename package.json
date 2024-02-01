@@ -12,20 +12,23 @@
     "app:linux": "electron-builder --linux",
     "app:mac": "electron-builder --mac",
     "watch": "nodemon --exec \"tsc && wait-on tcp:9090 && electron .\"",
-    "start": "concurrently -k \"cd ./frontend && yarn dev\" \"yarn watch\""
+    "start": "concurrently -k \"cd ./frontend && yarn dev\" \"yarn watch\"",
+    "format": "prettier --write \"electron/**/*.ts\" && prettier --write \"frontend/src/**/*.ts\"",
+    "format:check": "prettier --check \"electron/**/*.ts\" && prettier --write \"frontend/src/**/*.ts\""
   },
   "devDependencies": {
     "concurrently": "^7.6.0",
-    "dotenv": "^16.4.1",
     "electron": "^28.2.0",
     "electron-builder": "^23.6.0",
     "electron-devtools-installer": "^3.2.0",
     "nodemon": "^2.0.20",
+    "prettier": "^3.2.4",
     "typescript": "^5.3.3",
     "wait-on": "^7.0.1"
   },
   "dependencies": {
-    "electron-log": "^4.4.8",
+    "dotenv": "^16.4.1",
+    "electron-log": "^5.1.0",
     "electron-store": "^8.1.0",
     "electron-updater": "^5.3.0",
     "ts-node": "^10.9.2"
@@ -36,8 +39,8 @@
   "build": {
     "asar": false,
     "appId": "com.official-electron-vue.app",
-    "productName": "Electron Vue",
-    "copyright": "Copyright © 2022 ${author}",
+    "productName": "TimeTracker",
+    "copyright": "Copyright © 2024 Tulev Andrey",
     "nsis": {
       "oneClick": true,
       "allowToChangeInstallationDirectory": false,

@@ -7,7 +7,7 @@ export default abstract class TableEntity {
   protected on = false
   public timeFormat = 'HH:mm:ss'
 
-  protected constructor(entity: { id: number, name: string, tasks?: RequestedTask[], [key: string]: any }) {
+  protected constructor(entity: { id: number; name: string; tasks?: RequestedTask[]; [key: string]: any }) {
     this.id = entity.id
     this.name = entity.name
     this.itProject = Array.isArray(entity.tasks)

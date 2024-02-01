@@ -1,5 +1,5 @@
-import dayjs from "dayjs";
-import {Dayjs} from "dayjs";
+import dayjs from 'dayjs'
+import { Dayjs } from 'dayjs'
 
 export function initTimer(timer?: any) {
   return dayjs(timer).set('hours', 0).set('minutes', 0).set('seconds', 0)

@@ -1,6 +1,6 @@
 import { RequestedProject } from '../interfaces'
 import Task from './task'
-import {addTime, initTimer} from "../helpers";
+import { addTime, initTimer } from '../helpers'
 import TableEntity from './table-entity'
 
 export default class Project extends TableEntity {
@@ -8,7 +8,7 @@ export default class Project extends TableEntity {
 
   constructor(project: RequestedProject) {
     super(project)
-    this.tasks = project.tasks.map(task => new Task(task))
+    this.tasks = project.tasks.map((task) => new Task(task))
   }
 
   get getTime() {
@@ -28,7 +28,7 @@ export default class Project extends TableEntity {
   }
 
   set removeTaskById(id: number) {
-    this.tasks = this.tasks.filter(task => task.getId !== id)
+    this.tasks = this.tasks.filter((task) => task.getId !== id)
   }
 
   get children() {

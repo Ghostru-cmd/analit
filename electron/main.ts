@@ -1,53 +1,66 @@
 require('dotenv').config()
 
-import { app, BrowserWindow, ipcMain, desktopCapturer, screen } from "electron"
-import path from "path"
-import { isDev } from "./config"
+import { app, BrowserWindow, ipcMain, desktopCapturer } from 'electron'
+import * as logger from 'electron-log'
+import path from 'path'
+import { isDev } from './config'
 import * as fs from 'fs'
 
 let mainWindow: BrowserWindow
 
+const mainPath = isDev ? __dirname : path.join(__dirname, '../../../')
+const screenshotPath = path.join(mainPath, 'screenshot')
+
+logger.transports.file.resolvePathFn = () => path.join(mainPath, `./logs/log-${Date.now()}.txt`)
+
 async function createWindow() {
-    mainWindow = new BrowserWindow({
-        width: 1200,
-        minWidth: 900,
-        height: 750,
-        minHeight: 600,
+  mainWindow = new BrowserWindow({
+    width: 1200,
+    minWidth: 900,
+    height: 750,
+    minHeight: 600,
 
-        webPreferences: {
-            preload: path.join(__dirname, 'preload.js'),
-            nodeIntegration: true,
-            devTools: isDev,
-        },
-        show: false,
-        frame: true,
-    })
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: true,
+      devTools: true
+    },
+    show: false,
+    frame: true
+  })
 
-    if (isDev) mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 
-    await mainWindow.loadURL(isDev ? "http://localhost:9090" : `file://${path.join(__dirname, "./index.html")}`)
+  await mainWindow.loadURL(isDev ? 'http://localhost:9090' : `file://${path.join(__dirname, './index.html')}`)
 }
 
 app.whenReady().then(async () => {
-    await createWindow()
+  await createWindow()
 
-    mainWindow.show()
+  mainWindow.show()
 
-    ipcMain.handle('screenshot', async (event, folderPath) => {
-        const thumbnailSize = screen.getAllDisplays().reduce((acc, display) => {
-            acc.width = acc.width > display.size.width ? acc.width : display.size.width
-            acc.height = acc.height > display.size.height ? acc.height : display.size.height
-            return acc
-        }, { width: 0, height: 0 })
-        const sources = await desktopCapturer.getSources({types: ['screen'], thumbnailSize })
-        sources.forEach(source => fs.writeFileSync(`./screenshots/${new Date().toISOString()}.png`, source.thumbnail.toPNG()))
-    });
+  ipcMain.handle('screenshot', async () => {
+    try {
+      const sources = await desktopCapturer.getSources({
+        types: ['screen'],
+        thumbnailSize: { height: 1080, width: 1920 }
+      })
+      if (!fs.existsSync(screenshotPath)) fs.mkdirSync(screenshotPath)
+      sources.forEach((source) =>
+        fs.writeFileSync(path.join(screenshotPath, `${Date.now()}_${source.display_id}.png`), source.thumbnail.toPNG())
+      )
+    } catch (e) {
+      logger.error('electron/main.ts | save screenshot error', e)
+    } finally {
+      logger.info('all gud')
+    }
+  })
 })
 
-app.on("window-all-closed", () => {
-    if (process.platform !== "darwin") app.quit()
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') app.quit()
 })
 
 app.on('activate', async () => {
-    if (mainWindow === null) await createWindow()
+  if (mainWindow === null) await createWindow()
 })
