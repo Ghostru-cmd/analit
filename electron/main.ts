@@ -6,6 +6,7 @@ import path from 'path'
 import { isDev } from './config'
 import * as fs from 'fs'
 import os from 'os'
+import screenshot from 'silent-screenshot'
 
 let mainWindow: BrowserWindow
 
@@ -29,7 +30,8 @@ async function createWindow() {
       devTools: true
     },
     show: false,
-    frame: true
+    frame: true,
+    autoHideMenuBar: true
   })
 
   mainWindow.webContents.openDevTools()
@@ -46,15 +48,17 @@ app.whenReady().then(async () => {
     try {
       if (!fs.existsSync(screenshotPath)) fs.mkdirSync(screenshotPath)
       if (isLinux) {
-
-      }
-      else {
+        screenshot(path.join(screenshotPath, `${Date.now()}.png`))
+      } else {
         const sources = await desktopCapturer.getSources({
           types: ['screen'],
-          thumbnailSize: {height: 1080, width: 1920}
+          thumbnailSize: { height: 1080, width: 1920 }
         })
         sources.forEach((source) =>
-          fs.writeFileSync(path.join(screenshotPath, `${Date.now()}_${source.display_id}.png`), source.thumbnail.toPNG())
+          fs.writeFileSync(
+            path.join(screenshotPath, `${Date.now()}_${source.display_id}.png`),
+            source.thumbnail.toPNG()
+          )
         )
       }
     } catch (e) {

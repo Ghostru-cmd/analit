@@ -11,5 +11,8 @@
         "moduleResolution": "node",
         "baseUrl": "."
     },
-    "include": ["electron/**/*.ts"]
+    "include": [
+        "electron/**/*.ts",
+        "node_modules/silent-screenshot/index.d.ts"
+    ]
 }
